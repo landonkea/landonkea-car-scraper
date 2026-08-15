@@ -21,9 +21,9 @@ database:
 # ── Searches ───────────────────────────────────────────────────────
 # Each entry is a separate product search that runs sequentially.
 searches:
-  - product_name: "Honda Fit (2015+, automatic)"
+  - product_name: "Honda Fit (2017+, automatic)"
     product_type: car
-    min_year: 2015
+    min_year: 2017
     max_mileage: 150000
     transmission: automatic
     min_doors: 4
@@ -31,10 +31,11 @@ searches:
     preferred_brands:
       - Honda
     min_price: 500
+    results_per_size: 45
 
-  - product_name: "Chevy Spark (2015+, automatic)"
+  - product_name: "Chevy Spark (2017+, automatic)"
     product_type: car
-    min_year: 2015
+    min_year: 2017
     max_mileage: 150000
     transmission: automatic
     min_doors: 4
@@ -42,10 +43,11 @@ searches:
     preferred_brands:
       - Chevrolet
     min_price: 500
+    results_per_size: 45
 
-  - product_name: "Nissan Versa (2015+, automatic)"
+  - product_name: "Nissan Versa (2017+, automatic)"
     product_type: car
-    min_year: 2015
+    min_year: 2017
     max_mileage: 150000
     transmission: automatic
     min_doors: 4
@@ -53,10 +55,11 @@ searches:
     preferred_brands:
       - Nissan
     min_price: 500
+    results_per_size: 45
 
-  - product_name: "Kia Rio (2015+, automatic)"
+  - product_name: "Kia Rio (2017+, automatic)"
     product_type: car
-    min_year: 2015
+    min_year: 2017
     max_mileage: 150000
     transmission: automatic
     min_doors: 4
@@ -64,6 +67,7 @@ searches:
     preferred_brands:
       - Kia
     min_price: 500
+    results_per_size: 45
 
 # ── Price thresholds ────────────────────────────────────────────────
 # Deals under great_deal_usd are flagged and sent to Discord immediately.

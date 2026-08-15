@@ -73,6 +73,9 @@ class CarHandler(ProductTypeHandler):
         for kw in BAD_CONDITION_KEYWORDS:
             if kw in title_lower or kw in condition_lower:
                 return False
+        # Reject salvage/rebuilt titles outright
+        if any(kw in title_lower for kw in ("salvage", "rebuilt title", "rebuilt")):
+            return False
         return True
 
     def passes_type_filters(self, listing, search) -> bool:
