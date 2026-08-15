@@ -117,7 +117,8 @@ sites:
   # General electronics (disabled for car searches)
   facebook:
     enabled: false
-    # no applicable_product_types = runs for all product types
+    # Re-enable when ready to set up session cookie (note: violates Facebook ToS)
+    # applicable_product_types:
 
   marketplace:
     enabled: false

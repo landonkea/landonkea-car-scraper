@@ -10,6 +10,9 @@ import sys
 from datetime import datetime, timedelta, timezone
 from typing import Optional
 
+from dotenv import load_dotenv
+load_dotenv()
+
 from config import load_config, Config
 from database import (
     get_session,

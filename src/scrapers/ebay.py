@@ -22,11 +22,12 @@ class eBayScraper(BaseScraper):
     def _build_search_url(self) -> str:
         product = self.config.search.product_name
         max_price = int(self.config.price.absolute_max_usd)
-        query = f"{product} car"
-
-        # Add year range filter
-        if self.config.search.min_year:
-            query += f" {self.config.search.min_year} or newer"
+        # Simplify query: just "2015 honda fit" not the full product_name with parens
+        min_year = self.config.search.min_year
+        # Extract make/model from product_name (e.g. "Honda Fit (2015+, automatic)" -> "Honda Fit")
+        import re as _re
+        simple_name = _re.sub(r'\s*\(.*', '', product)
+        query = f"{min_year} {simple_name}"
 
         encoded_query = query.replace(" ", "+")
 
@@ -55,6 +56,8 @@ class eBayScraper(BaseScraper):
     def _fetch_listings_html(self, search_url: str) -> str:
         try:
             from playwright.sync_api import sync_playwright
+            from playwright_stealth import Stealth
+            stealth = Stealth()
             with sync_playwright() as playwright:
                 browser = playwright.chromium.launch(
                     headless=True,
@@ -65,11 +68,12 @@ class eBayScraper(BaseScraper):
                     viewport={"width": 1920, "height": 1080},
                     locale="en-US",
                 )
+                stealth.apply_stealth_sync(context)
                 page = context.new_page()
                 page.goto("https://www.ebay.com", wait_until="domcontentloaded", timeout=15000)
                 page.wait_for_timeout(3000)
                 page.goto(search_url, wait_until="domcontentloaded", timeout=30000)
-                page.wait_for_timeout(3000)
+                page.wait_for_timeout(5000)
                 html = page.content()
                 browser.close()
                 return html
