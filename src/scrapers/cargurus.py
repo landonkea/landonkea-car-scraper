@@ -1,51 +1,69 @@
 # ───────────────────────────────────────────────────────────────────
-# CarGurus scraper, Playwright for JS-rendered car search
+# CarGurus scraper, uses JSON API with Playwright stealth
 # ───────────────────────────────────────────────────────────────────
-# CarGurus is a car search engine with dealer + private party
-# listings. Uses Playwright because the site is JS-heavy.
+# CarGurus blocks headless browsers. Uses playwright-stealth to
+# bypass detection and fetches their searchResults.action JSON API.
 # ───────────────────────────────────────────────────────────────────
 
 import json
 import re
 from typing import Optional
 
-from bs4 import BeautifulSoup
-
 from scrapers.base import BaseScraper, ScrapedListing
 from config import Config
 
 
+# CarGurus entity IDs for each car model
+ENTITY_IDS = {
+    "honda fit": "d744",
+    "chevy spark": "d906",
+    "chevrolet spark": "d906",
+    "nissan versa": "d262",
+    "kia rio": "d159",
+}
+
+
 class CarGurusScraper(BaseScraper):
-    """Scrapes CarGurus for car listings in Arizona."""
+    """Scrapes CarGurus for car listings in Arizona via JSON API."""
 
     def __init__(self, config: Config):
         super().__init__(config)
         self.source_name = "cargurus"
 
-    def _build_search_url(self) -> str:
-        product = self.config.search.product_name
-        # CarGurus URL: /Cars/inventorylisting/viewDetailsFilterViewInventoryListing.action
-        # Using the search page instead: /Cars/{make}-{model}/filter
-        # Fallback to their general search
-        query = product.replace(" ", "+")
-        return (
-            f"https://www.cargurus.com/Cars/inventorylisting/viewDetailsFilterViewInventoryListing.action"
-            f"?zip=85001"  # Phoenix AZ zip
-            f"&showNegotiable=true"
-            f"&sortDir=ASC"
-            f"&sourceContext=carGurusHomePageModel"
-            f"&distance=50"
-            f"&sortType=PRICE"
-            f"&entitySelectingHelper.selectedEntity="
-            f"&entitySelectingHelper.selectedEntity2="
-        )
+    def _get_entity_id(self) -> str:
+        """Get the CarGurus entity ID for the current search."""
+        product = self.config.search.product_name.lower()
+        for key, entity_id in ENTITY_IDS.items():
+            if key in product:
+                return entity_id
+        return ""
 
-    def _fetch_page(self, url: str) -> str:
-        """Fetch CarGurus page using Playwright."""
+    def _fetch_json_listings(self) -> list[dict]:
+        """Fetch listings from CarGurus JSON API using Playwright stealth."""
         try:
             from playwright.sync_api import sync_playwright
-            with sync_playwright() as playwright:
-                browser = playwright.chromium.launch(
+            from playwright_stealth import Stealth
+            stealth = Stealth()
+
+            entity_id = self._get_entity_id()
+            min_year = self.config.search.min_year
+            max_price = int(self.config.price.absolute_max_usd)
+            zip_code = "85001"  # Phoenix AZ
+
+            api_url = (
+                f"https://www.cargurus.com/Cars/searchResults.action"
+                f"?zip={zip_code}"
+                f"&inventorySearchWidgetType=AUTO"
+                f"&sortDir=ASC"
+                f"&sortType=PRICE"
+                f"&offset=0"
+                f"&maxResults=100"
+                f"&filtersModified=true"
+                f"&entitySelectingHelper.selectedEntity={entity_id}"
+            )
+
+            with sync_playwright() as p:
+                browser = p.chromium.launch(
                     headless=True,
                     args=["--no-sandbox", "--disable-setuid-sandbox", "--disable-dev-shm-usage"],
                 )
@@ -54,109 +72,110 @@ class CarGurusScraper(BaseScraper):
                     viewport={"width": 1920, "height": 1080},
                     locale="en-US",
                 )
+                stealth.apply_stealth_sync(context)
                 page = context.new_page()
-                page.goto(url, wait_until="domcontentloaded", timeout=30000)
+
+                # Navigate to the API endpoint
+                page.goto(api_url, wait_until="domcontentloaded", timeout=30000)
                 page.wait_for_timeout(5000)
 
-                # Try to extract listings from the page
-                html = page.content()
+                # Get the JSON content from the page body
+                content = page.evaluate("() => document.body.innerText")
                 browser.close()
-                return html
+
+                # Parse JSON
+                if content.strip().startswith("["):
+                    return json.loads(content)
+                return []
+
         except Exception as e:
-            raise Exception(f"Playwright failed: {e}") from e
+            print(f"  [CarGurus] Playwright/API failed: {e}")
+            return []
 
-    def _parse_listing(self, card: BeautifulSoup) -> Optional[ScrapedListing]:
-        """Parse a CarGurus listing card."""
-        # Title / car name
-        title_el = card.select_one("[class*='title' i], h4, .cg-dealFinder-result-subtitle")
-        if not title_el:
-            title_el = card.select_one("a[aria-label]")
-        title = ""
-        if title_el:
-            title = title_el.get("aria-label") or title_el.get_text(strip=True)
-        if not title:
+    def _parse_json_listing(self, item: dict) -> Optional[ScrapedListing]:
+        """Parse a CarGurus JSON listing into a ScrapedListing."""
+        try:
+            title = item.get("listingTitle", "")
+            if not title:
+                return None
+
+            price = item.get("price", 0)
+            if price <= 0:
+                return None
+
+            # Filter by year
+            year = item.get("carYear", 0)
+            if year and year < self.config.search.min_year:
+                return None
+
+            # Build URL
+            listing_id = item.get("id", "")
+            url = f"https://www.cargurus.com/Cars/details/{listing_id}"
+
+            # Extract mileage
+            mileage_data = item.get("unitMileage", {})
+            mileage = int(mileage_data.get("value", 0)) if mileage_data.get("value") else None
+
+            # Get transmission
+            transmission = item.get("localizedTransmission", "")
+            if "automatic" in transmission.lower() or "cvt" in transmission.lower():
+                transmission = "Automatic"
+            elif "manual" in transmission.lower():
+                transmission = "Manual"
+            else:
+                transmission = None
+
+            # Get location
+            city = item.get("sellerCity", "")
+            region = item.get("sellerRegion", "")
+            location = f"{city}, {region}" if city else None
+
+            # Get make/model
+            make = item.get("makeName", "")
+            model = item.get("modelName", "")
+
+            specs = self.parse_common_specs(title)
+
+            return ScrapedListing(
+                source=self.source_name,
+                listing_id=f"cargurus-{listing_id}",
+                title=title,
+                price_usd=float(price),
+                url=url,
+                condition="Used",
+                location=location,
+                year=specs.get("year") or year,
+                make=specs.get("make") or make,
+                model=specs.get("model") or model,
+                mileage=specs.get("mileage") or mileage,
+                transmission=specs.get("transmission") or transmission,
+                doors=specs.get("doors"),
+                title_status=specs.get("title_status"),
+                fuel_type=specs.get("fuel_type"),
+            )
+        except Exception:
             return None
-
-        # Price
-        price_el = card.select_one("[class*='price' i], .cg-dealFinder-result-price")
-        if not price_el:
-            return None
-        price_text = price_el.get_text(strip=True)
-        price_match = re.search(r'\$?([0-9,]+)', price_text)
-        if not price_match:
-            return None
-        price = float(price_match.group(1).replace(",", ""))
-        if price <= 0:
-            return None
-
-        # URL
-        link_el = card.select_one("a[href]")
-        url = ""
-        if link_el:
-            url = link_el.get("href", "")
-            if url and not url.startswith("http"):
-                url = f"https://www.cargurus.com{url}"
-
-        # Listing ID from URL
-        id_match = re.search(r'/(?:listing|L-)([^/?]+)', url)
-        listing_id = id_match.group(1) if id_match else f"url_{hash(url)}"
-
-        # Location
-        location_el = card.select_one("[class*='location' i], [class*='dealer' i]")
-        location = location_el.get_text(strip=True) if location_el else None
-
-        specs = self.parse_common_specs(title)
-
-        return ScrapedListing(
-            source=self.source_name,
-            listing_id=f"cargurus-{listing_id}",
-            title=title,
-            price_usd=price,
-            url=url,
-            condition="Used",
-            location=location,
-            year=specs.get("year"),
-            make=specs.get("make"),
-            model=specs.get("model"),
-            mileage=specs.get("mileage"),
-            transmission=specs.get("transmission"),
-            doors=specs.get("doors"),
-            title_status=specs.get("title_status"),
-            fuel_type=specs.get("fuel_type"),
-        )
 
     def scrape(self) -> list[ScrapedListing]:
         found: list[ScrapedListing] = []
         found_ids: set = set()
-        search_url = self._build_search_url()
 
-        try:
-            html = self._fetch_page(search_url)
-            soup = self.parse_html(html)
+        # Fetch JSON listings from API
+        json_listings = self._fetch_json_listings()
+        print(f"  [CarGurus] API returned {len(json_listings)} raw listings")
 
-            # Try multiple selector strategies for CarGurus cards
-            cards = (
-                soup.select("[class*='listing' i]")
-                or soup.select("[class*='result' i]")
-                or soup.select("[data-testid]")
-                or soup.select("article")
-            )
-
-            max_results = self.config.search.results_per_size
-            for card in cards:
-                if len(found) >= max_results:
-                    break
-                try:
-                    listing = self._parse_listing(card)
-                    if listing and listing.listing_id not in found_ids:
-                        if self.passes_filters(listing):
-                            found.append(listing)
-                            found_ids.add(listing.listing_id)
-                except Exception:
-                    continue
-
-        except Exception as e:
-            print(f"  [CarGurus] Error: {e}")
+        max_results = self.config.search.results_per_size
+        for item in json_listings:
+            if len(found) >= max_results:
+                break
+            try:
+                listing = self._parse_json_listing(item)
+                if listing and listing.listing_id not in found_ids:
+                    if self.passes_filters(listing):
+                        found.append(listing)
+                        found_ids.add(listing.listing_id)
+            except Exception:
+                continue
 
         print(f"  [CarGurus] Found {len(found)} matching listings")
         return found

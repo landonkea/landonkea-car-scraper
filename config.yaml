@@ -153,7 +153,8 @@ sites:
       - car
 
   autotrader:
-    enabled: true
+    enabled: false
+    # Blocked by Akamai bot protection - needs residential proxy to work
     applicable_product_types:
       - car
     base_url: https://www.autotrader.com
