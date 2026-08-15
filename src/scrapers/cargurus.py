@@ -48,19 +48,23 @@ class CarGurusScraper(BaseScraper):
             entity_id = self._get_entity_id()
             min_year = self.config.search.min_year
             max_price = int(self.config.price.absolute_max_usd)
-            zip_code = "85001"  # Phoenix AZ
 
-            api_url = (
-                f"https://www.cargurus.com/Cars/searchResults.action"
-                f"?zip={zip_code}"
-                f"&inventorySearchWidgetType=AUTO"
-                f"&sortDir=ASC"
-                f"&sortType=PRICE"
-                f"&offset=0"
-                f"&maxResults=100"
-                f"&filtersModified=true"
-                f"&entitySelectingHelper.selectedEntity={entity_id}"
-            )
+            # Get zip codes from locations config
+            zip_codes = [loc.zip for loc in self.config.locations] if self.config.locations else ["85001"]
+
+            all_listings = []
+            for zip_code in zip_codes:
+                api_url = (
+                    f"https://www.cargurus.com/Cars/searchResults.action"
+                    f"?zip={zip_code}"
+                    f"&inventorySearchWidgetType=AUTO"
+                    f"&sortDir=ASC"
+                    f"&sortType=PRICE"
+                    f"&offset=0"
+                    f"&maxResults=100"
+                    f"&filtersModified=true"
+                    f"&entitySelectingHelper.selectedEntity={entity_id}"
+                )
 
             with sync_playwright() as p:
                 browser = p.chromium.launch(
@@ -81,12 +85,13 @@ class CarGurusScraper(BaseScraper):
 
                 # Get the JSON content from the page body
                 content = page.evaluate("() => document.body.innerText")
-                browser.close()
 
                 # Parse JSON
                 if content.strip().startswith("["):
-                    return json.loads(content)
-                return []
+                    all_listings.extend(json.loads(content))
+
+            browser.close()
+            return all_listings
 
         except Exception as e:
             print(f"  [CarGurus] Playwright/API failed: {e}")
@@ -130,6 +135,15 @@ class CarGurusScraper(BaseScraper):
             region = item.get("sellerRegion", "")
             location = f"{city}, {region}" if city else None
 
+            # Detect dealer vs private party
+            seller_type = item.get("sellerType", "").upper()
+            if seller_type == "DEALER":
+                seller_type = "dealer"
+            elif seller_type == "PRIVATE_PARTY":
+                seller_type = "private_party"
+            else:
+                seller_type = "dealer"  # CarGurus is mostly dealers
+
             # Get make/model
             make = item.get("makeName", "")
             model = item.get("modelName", "")
@@ -152,6 +166,7 @@ class CarGurusScraper(BaseScraper):
                 doors=specs.get("doors"),
                 title_status=specs.get("title_status"),
                 fuel_type=specs.get("fuel_type"),
+                seller_type=seller_type,
             )
         except Exception:
             return None

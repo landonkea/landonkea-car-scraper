@@ -63,6 +63,8 @@ class Listing(Base):
     doors = Column(Integer, nullable=True)
     title_status = Column(String(20), nullable=True)
     fuel_type = Column(String(20), nullable=True)
+    seller_type = Column(String(20), nullable=True)  # "dealer" or "private_party"
+    vin = Column(String(17), nullable=True, index=True)
 
     # ── Deal scoring ────────────────────────────────────────────
     deal_score = Column(Float, nullable=True)

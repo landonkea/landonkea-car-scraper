@@ -139,6 +139,14 @@ def _environment_scoped_db_url(url: str, environment: str) -> str:
 
 
 @dataclass
+class LocationConfig:
+    """One search location (city + zip code)."""
+    name: str
+    zip: str
+    regions: list[str] = field(default_factory=list)
+
+
+@dataclass
 class Config:
     """Top-level config, holds everything."""
     searches: list[SearchConfig]
@@ -148,6 +156,7 @@ class Config:
     database: DatabaseConfig
     schedule: dict
     price_drop: PriceDropConfig
+    locations: list[LocationConfig] = field(default_factory=list)
     secrets: dict = field(default_factory=_load_env_secrets)
     environment: str = field(default_factory=get_environment)
     search: Optional["SearchConfig"] = None
@@ -253,6 +262,14 @@ def load_config(path: str = "config.yaml", local_path: str = "config.local.yaml"
             min_drop_percent=price_drop_raw.get("min_drop_percent", 5),
             min_drop_usd=price_drop_raw.get("min_drop_usd", 50),
         ),
+        locations=[
+            LocationConfig(
+                name=loc["name"],
+                zip=loc["zip"],
+                regions=loc.get("regions", []),
+            )
+            for loc in raw.get("locations", [])
+        ],
         secrets=_load_env_secrets(),
         environment=environment,
     )

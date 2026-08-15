@@ -174,6 +174,13 @@ class PriceAnalyzer:
         score += source_component
         breakdown["source_reliability"] = source_component
 
+        # Private party bonus (usually better deals, less markup)
+        seller_component = 0.0
+        if hasattr(listing, 'seller_type') and listing.seller_type == "private_party":
+            seller_component = 5.0
+        score += seller_component
+        breakdown["seller_bonus"] = seller_component
+
         s = self.config.search
         handler = PRODUCT_TYPES[s.product_type]
         spec_component = handler.score_bonuses(listing, s)

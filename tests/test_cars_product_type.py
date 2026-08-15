@@ -166,9 +166,8 @@ class TestIsRelevant:
         assert handler.is_relevant("2018 Honda Fit, frame damage", mock_search) is False
 
     def test_rejects_salvage_title(self, handler, mock_search):
-        # salvage title is filtered by passes_type_filters, not is_relevant
-        # is_relevant only checks ACCESSORY_KEYWORDS and BAD_CONDITION_KEYWORDS
-        assert handler.is_relevant("2018 Honda Fit, salvage title", mock_search) is True
+        # salvage title is filtered in both is_relevant and passes_type_filters
+        assert handler.is_relevant("2018 Honda Fit, salvage title", mock_search) is False
 
     def test_rejects_floor_mats_only(self, handler, mock_search):
         assert handler.is_relevant("Honda Fit floor mats", mock_search) is False

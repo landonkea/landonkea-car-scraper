@@ -12,6 +12,26 @@ schedule:
   enabled: true
   interval_hours: 6
 
+# ── Locations ───────────────────────────────────────────────────────
+# Multiple Arizona locations to search
+locations:
+  - name: "Phoenix"
+    zip: "85001"
+    regions:
+      - phoenix
+  - name: "Tucson"
+    zip: "85701"
+    regions:
+      - tucson
+  - name: "Flagstaff"
+    zip: "86001"
+    regions:
+      - flagstaff
+  - name: "Sedona"
+    zip: "86336"
+    regions:
+      - sedona
+
 # ── Global ─────────────────────────────────────────────────────────
 request_timeout: 40
 

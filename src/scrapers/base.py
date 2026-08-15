@@ -38,6 +38,8 @@ class ScrapedListing:
     doors: Optional[int] = None
     title_status: Optional[str] = None
     fuel_type: Optional[str] = None
+    seller_type: Optional[str] = None  # "dealer" or "private_party"
+    vin: Optional[str] = None
     # ── Electronics-shaped stubs (always None for car listings) ──
     # Present so scrapers using parse_common_specs() don't KeyError
     ram_gb: Optional[int] = None

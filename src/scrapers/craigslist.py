@@ -33,7 +33,15 @@ class CraigslistScraper(BaseScraper):
     @property
     def regions(self) -> list[str]:
         site_config = self.config.sites.craigslist
-        return list(site_config.regions) if site_config.regions else list(self.DEFAULT_REGIONS)
+        if site_config.regions:
+            return list(site_config.regions)
+        # Use locations from config
+        if self.config.locations:
+            all_regions = []
+            for loc in self.config.locations:
+                all_regions.extend(loc.regions)
+            return all_regions if all_regions else list(self.DEFAULT_REGIONS)
+        return list(self.DEFAULT_REGIONS)
 
     def _build_search_url(self, region: str) -> str:
         query = quote(self.config.search.product_name)
@@ -76,6 +84,12 @@ class CraigslistScraper(BaseScraper):
 
         location_el = item.select_one("div.location")
         location = location_el.get_text(strip=True) if location_el else None
+
+        # Detect dealer vs private party
+        seller_type = "private_party"
+        item_text = item.get_text(strip=True).lower()
+        if "dealer" in item_text or "dealership" in item_text:
+            seller_type = "dealer"
 
         listing_id = self._get_listing_id(url)
         specs = self.parse_common_specs(title)

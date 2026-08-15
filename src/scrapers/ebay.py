@@ -98,6 +98,10 @@ class eBayScraper(BaseScraper):
         title = title_elem.get_text(strip=True)
         url = link_elem.get("href", "")
 
+        # Clean up eBay title artifacts
+        title = re.sub(r'opens\s*(?:in\s*(?:a\s*)?new\s*(?:tab|window))?$', '', title, flags=re.IGNORECASE).strip()
+        title = re.sub(r'\s+', ' ', title)  # normalize whitespace
+
         if not title or "Shop on eBay" in title or "contact seller" in title.lower():
             return None
         if not price_elem:
