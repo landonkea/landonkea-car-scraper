@@ -1,0 +1,22 @@
+# ───────────────────────────────────────────────────────────────────
+# Local config overrides (gitignored)
+# ───────────────────────────────────────────────────────────────────
+# Copy this to config.local.yaml and edit.
+# Deep-merges on top of config.yaml at runtime.
+# ───────────────────────────────────────────────────────────────────
+
+# Craigslist regions to search. Replace the placeholder in
+# config.yaml with your real metro areas. Verified Arizona slugs:
+#   phoenix, tucson
+# Other nearby verified slugs: albuquerque, santafe, lasvegas,
+# denver, cosprings, boulder, sandiego, losangeles
+sites:
+  craigslist:
+    regions:
+      - "phoenix"
+      - "tucson"
+
+# Optional: separate Discord webhook for car alerts
+# alerts:
+#   discord:
+#     webhook_url: "https://discord.com/api/webhooks/..."

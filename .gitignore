@@ -1,0 +1,49 @@
+# ── Data files (per-environment databases, Discord state, watchlist) ──
+data/*.db
+data/*.db-journal
+data/discord_messages.json
+data/watchlist.json
+data/watchlist.dev.json
+data/watchlist.staging.json
+
+# ── Secrets (NEVER commit these) ──
+.env
+.env.*
+!.env.example
+!.env.dev.example
+
+# ── Python ──
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+*.egg-info/
+dist/
+build/
+.eggs/
+
+# ── Virtual environments ──
+venv/
+.venv/
+env/
+
+# ── IDE / editor ──
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# ── OS ──
+.DS_Store
+Thumbs.db
+
+# ── Test / coverage ──
+.pytest_cache/
+htmlcov/
+.coverage
+coverage.xml
+test-results/
+
+# ── Playwright browsers (large, installed separately) ──
+# playwright install chromium downloads ~150MB; not committed.

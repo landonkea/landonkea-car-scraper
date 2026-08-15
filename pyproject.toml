@@ -1,0 +1,58 @@
+# ───────────────────────────────────────────────────────────────────
+# Project metadata and dependencies
+# ───────────────────────────────────────────────────────────────────
+# Car price scraper -- finds the cheapest used small cars
+# (Honda Fit, Chevy Spark, Nissan Versa, etc.) across multiple
+# marketplaces, alerting on great deals via Discord and email.
+# ───────────────────────────────────────────────────────────────────
+
+[build-system]
+requires = ["setuptools>=68.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "landonkea-car-scraper"
+version = "1.0.0"
+description = "Scrapes Craigslist, OfferUp, eBay Motors, CarGurus, AutoTrader, and Facebook Marketplace for cheap used small cars."
+readme = "README.md"
+requires-python = ">=3.11"
+
+dependencies = [
+    # ── Web scraping ──────────────────────────────────────────────
+    "requests>=2.31",
+    "beautifulsoup4>=4.12",
+    "lxml>=5.0",
+
+    # ── Database ──────────────────────────────────────────────────
+    "sqlalchemy>=2.0",
+    "alembic>=1.13",
+
+    # ── Configuration ─────────────────────────────────────────────
+    "pyyaml>=6.0",
+
+    # ── Browser automation (for JS-heavy sites) ────────────────
+    "playwright>=1.40",
+    "playwright-stealth>=1.0",
+]
+
+[project.scripts]
+car-scraper = "main:main"
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=8.0",
+    "pytest-cov>=4.0",
+    "ruff>=0.3",
+    "mypy>=1.8",
+]
+
+[tool.ruff]
+line-length = 120
+
+[tool.ruff.lint]
+select = ["E", "F"]
+
+[tool.mypy]
+mypy_path = "src"
+explicit_package_bases = true
+ignore_missing_imports = true

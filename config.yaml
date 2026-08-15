@@ -1,0 +1,166 @@
+# ───────────────────────────────────────────────────────────────────
+# Config file for car scraper
+# ───────────────────────────────────────────────────────────────────
+# All marketplace sites, search parameters, and alert settings
+# are configured here. Never commit this file with real API keys.
+# ───────────────────────────────────────────────────────────────────
+
+environment: dev
+
+# ── Schedule ────────────────────────────────────────────────────────
+schedule:
+  enabled: true
+  interval_hours: 6
+
+# ── Global ─────────────────────────────────────────────────────────
+request_timeout: 40
+
+database:
+  url: sqlite:///data/listings.db
+
+# ── Searches ───────────────────────────────────────────────────────
+# Each entry is a separate product search that runs sequentially.
+searches:
+  - product_name: "Honda Fit (2015+, automatic)"
+    product_type: car
+    min_year: 2015
+    max_mileage: 150000
+    transmission: automatic
+    min_doors: 4
+    title_status: clean
+    preferred_brands:
+      - Honda
+    min_price: 500
+
+  - product_name: "Chevy Spark (2015+, automatic)"
+    product_type: car
+    min_year: 2015
+    max_mileage: 150000
+    transmission: automatic
+    min_doors: 4
+    title_status: clean
+    preferred_brands:
+      - Chevrolet
+    min_price: 500
+
+  - product_name: "Nissan Versa (2015+, automatic)"
+    product_type: car
+    min_year: 2015
+    max_mileage: 150000
+    transmission: automatic
+    min_doors: 4
+    title_status: clean
+    preferred_brands:
+      - Nissan
+    min_price: 500
+
+  - product_name: "Kia Rio (2015+, automatic)"
+    product_type: car
+    min_year: 2015
+    max_mileage: 150000
+    transmission: automatic
+    min_doors: 4
+    title_status: clean
+    preferred_brands:
+      - Kia
+    min_price: 500
+
+# ── Price thresholds ────────────────────────────────────────────────
+# Deals under great_deal_usd are flagged and sent to Discord immediately.
+price:
+  absolute_max_usd: 15000
+  great_deal_usd:
+    car: 6000
+  good_deal_usd:
+    car: 8000
+  top_deals_count: 10
+  suspicious_price_ratio: 0.5
+  suspicious_min_sample: 3
+  source_reliability: {}
+
+# ── Alerts ──────────────────────────────────────────────────────────
+alerts:
+  email:
+    enabled: false
+    smtp_server: ${SMTP_HOST}
+    smtp_port: 587
+  discord:
+    enabled: true
+
+# ── Discord webhooks ────────────────────────────────────────────────
+# Each product type has its own Discord channel/webhook.
+discord:
+  webhooks:
+    laptop: ${DISCORD_WEBHOOK_URL_LAPTOP}
+    phone: ${DISCORD_WEBHOOK_URL_PHONE}
+    monitor: ${DISCORD_WEBHOOK_URL_MONITOR}
+    gpu: ${DISCORD_WEBHOOK_URL_GPU}
+    cpu: ${DISCORD_WEBHOOK_URL_CPU}
+    console: ${DISCORD_WEBHOOK_URL_CONSOLE}
+    camera: ${DISCORD_WEBHOOK_URL_CAMERA}
+    audio: ${DISCORD_WEBHOOK_URL_AUDIO}
+    storage: ${DISCORD_WEBHOOK_URL_STORAGE}
+    network: ${DISCORD_WEBHOOK_URL_NETWORK}
+    pc: ${DISCORD_WEBHOOK_URL_PC}
+    tablet: ${DISCORD_WEBHOOK_URL_TABLET}
+    other: ${DISCORD_WEBHOOK_URL}
+    car: ${DISCORD_WEBHOOK_URL_CAR}
+
+# ── Sites ───────────────────────────────────────────────────────────
+# applicable_product_types restricts a site to specific product types.
+# Set to null (omitted) to allow all product types.
+sites:
+  # Apple-specific marketplace (disabled for car searches)
+  apple:
+    enabled: false
+
+  # General electronics (disabled for car searches)
+  facebook:
+    enabled: false
+    # no applicable_product_types = runs for all product types
+
+  marketplace:
+    enabled: false
+
+  amazon:
+    enabled: false
+
+  craigslist:
+    enabled: true
+    applicable_product_types:
+      - car
+    base_url: https://phoenix.craigslist.org
+    search_path: /search/cta
+
+  offerup:
+    enabled: true
+    applicable_product_types:
+      - car
+
+  ebay:
+    enabled: true
+    applicable_product_types:
+      - car
+
+  cargurus:
+    enabled: true
+    applicable_product_types:
+      - car
+
+  autotrader:
+    enabled: true
+    applicable_product_types:
+      - car
+    base_url: https://www.autotrader.com
+
+  bestbuy:
+    enabled: false
+
+  newegg:
+    enabled: false
+
+  bhphotovideo:
+    enabled: false
+
+  amazonaws:
+    enabled: false
