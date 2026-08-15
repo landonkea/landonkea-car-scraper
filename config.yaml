@@ -21,9 +21,9 @@ database:
 # ── Searches ───────────────────────────────────────────────────────
 # Each entry is a separate product search that runs sequentially.
 searches:
-  - product_name: "Honda Fit (2025+, automatic)"
+  - product_name: "Honda Fit (2015+, automatic)"
     product_type: car
-    min_year: 2025
+    min_year: 2015
     max_mileage: 150000
     transmission: automatic
     min_doors: 4
@@ -33,9 +33,9 @@ searches:
     min_price: 500
     results_per_size: 45
 
-  - product_name: "Chevy Spark (2025+, automatic)"
+  - product_name: "Chevy Spark (2015+, automatic)"
     product_type: car
-    min_year: 2025
+    min_year: 2015
     max_mileage: 150000
     transmission: automatic
     min_doors: 4
@@ -45,9 +45,9 @@ searches:
     min_price: 500
     results_per_size: 45
 
-  - product_name: "Nissan Versa (2025+, automatic)"
+  - product_name: "Nissan Versa (2015+, automatic)"
     product_type: car
-    min_year: 2025
+    min_year: 2015
     max_mileage: 150000
     transmission: automatic
     min_doors: 4
@@ -57,9 +57,9 @@ searches:
     min_price: 500
     results_per_size: 45
 
-  - product_name: "Kia Rio (2025+, automatic)"
+  - product_name: "Kia Rio (2015+, automatic)"
     product_type: car
-    min_year: 2025
+    min_year: 2015
     max_mileage: 150000
     transmission: automatic
     min_doors: 4
