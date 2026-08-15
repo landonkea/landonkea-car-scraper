@@ -120,7 +120,7 @@ class eBayScraper(BaseScraper):
         condition = condition_elem.get_text(strip=True) if condition_elem else None
         specs = self.parse_common_specs(title)
 
-        return ScrapedListing(
+        listing = ScrapedListing(
             source=self.source_name,
             listing_id=listing_id,
             title=title,
@@ -137,6 +137,7 @@ class eBayScraper(BaseScraper):
             title_status=specs.get("title_status"),
             fuel_type=specs.get("fuel_type"),
         )
+        return self.enrich_with_vin(listing)
 
     def scrape(self) -> list[ScrapedListing]:
         found: list[ScrapedListing] = []

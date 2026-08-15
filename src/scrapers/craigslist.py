@@ -94,7 +94,7 @@ class CraigslistScraper(BaseScraper):
         listing_id = self._get_listing_id(url)
         specs = self.parse_common_specs(title)
 
-        return ScrapedListing(
+        listing = ScrapedListing(
             source=self.source_name,
             listing_id=listing_id,
             title=title,
@@ -110,13 +110,9 @@ class CraigslistScraper(BaseScraper):
             doors=specs.get("doors"),
             title_status=specs.get("title_status"),
             fuel_type=specs.get("fuel_type"),
-            ram_gb=None,
-            storage_gb=None,
-            screen_size=None,
-            chip=None,
-            cpu_cores=None,
-            gpu_cores=None,
+            seller_type=seller_type,
         )
+        return self.enrich_with_vin(listing)
 
     def _fetch_cards(self, region: str) -> list:
         url = self._build_search_url(region)

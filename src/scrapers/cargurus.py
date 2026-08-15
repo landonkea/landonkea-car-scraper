@@ -46,26 +46,12 @@ class CarGurusScraper(BaseScraper):
             stealth = Stealth()
 
             entity_id = self._get_entity_id()
-            min_year = self.config.search.min_year
             max_price = int(self.config.price.absolute_max_usd)
 
             # Get zip codes from locations config
             zip_codes = [loc.zip for loc in self.config.locations] if self.config.locations else ["85001"]
 
             all_listings = []
-            for zip_code in zip_codes:
-                api_url = (
-                    f"https://www.cargurus.com/Cars/searchResults.action"
-                    f"?zip={zip_code}"
-                    f"&inventorySearchWidgetType=AUTO"
-                    f"&sortDir=ASC"
-                    f"&sortType=PRICE"
-                    f"&offset=0"
-                    f"&maxResults=100"
-                    f"&filtersModified=true"
-                    f"&entitySelectingHelper.selectedEntity={entity_id}"
-                )
-
             with sync_playwright() as p:
                 browser = p.chromium.launch(
                     headless=True,
@@ -79,18 +65,32 @@ class CarGurusScraper(BaseScraper):
                 stealth.apply_stealth_sync(context)
                 page = context.new_page()
 
-                # Navigate to the API endpoint
-                page.goto(api_url, wait_until="domcontentloaded", timeout=30000)
-                page.wait_for_timeout(5000)
+                for zip_code in zip_codes:
+                    api_url = (
+                        f"https://www.cargurus.com/Cars/searchResults.action"
+                        f"?zip={zip_code}"
+                        f"&inventorySearchWidgetType=AUTO"
+                        f"&sortDir=ASC"
+                        f"&sortType=PRICE"
+                        f"&offset=0"
+                        f"&maxResults=100"
+                        f"&filtersModified=true"
+                        f"&entitySelectingHelper.selectedEntity={entity_id}"
+                    )
 
-                # Get the JSON content from the page body
-                content = page.evaluate("() => document.body.innerText")
+                    try:
+                        page.goto(api_url, wait_until="domcontentloaded", timeout=30000)
+                        page.wait_for_timeout(5000)
 
-                # Parse JSON
-                if content.strip().startswith("["):
-                    all_listings.extend(json.loads(content))
+                        content = page.evaluate("() => document.body.innerText")
+                        if content.strip().startswith("["):
+                            all_listings.extend(json.loads(content))
+                            print(f"  [CarGurus] zip={zip_code}: fetched {len(all_listings)} listings so far")
+                    except Exception as e:
+                        print(f"  [CarGurus] zip={zip_code} failed: {e}")
+                        continue
 
-            browser.close()
+                browser.close()
             return all_listings
 
         except Exception as e:

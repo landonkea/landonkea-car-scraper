@@ -187,6 +187,28 @@ class PriceAnalyzer:
         score += spec_component
         breakdown["spec_bonus"] = round(spec_component, 1)
 
+        # Market comparison: how does this price compare to same make/model?
+        from kbb import compare_to_market, get_market_prices
+        market_bonus = 0.0
+        if listing.make and listing.model:
+            market_prices = get_market_prices(listing.make, listing.model, self.listings)
+            market_result = compare_to_market(
+                listing.price_usd, listing.make, listing.model,
+                listing.year or 0, market_prices,
+            )
+            listing.car_kbb_price = market_result.get("avg_price")
+            listing.vs_kbb_pct = market_result.get("discount_pct")
+            if market_result["rating"] == "exceptional":
+                market_bonus = 15.0
+            elif market_result["rating"] == "good":
+                market_bonus = 10.0
+            elif market_result["rating"] == "fair":
+                market_bonus = 5.0
+            elif market_result["rating"] == "above_market":
+                market_bonus = -5.0
+        score += market_bonus
+        breakdown["market_comparison"] = market_bonus
+
         pre_clamp_score = score
         score = max(0, min(100, score))
         if score != pre_clamp_score:

@@ -1,68 +1,47 @@
 # ───────────────────────────────────────────────────────────────────
-# KBB price comparison, flags deals below market value
+# Price comparison against market average
 # ───────────────────────────────────────────────────────────────────
-# Uses Kelley Blue Book's public API to compare listing prices
-# against estimated market value. Deals priced significantly below
-# KBB are flagged as exceptional.
+# Since KBB doesn't have a free API, we use our own scraped data
+# to calculate market average for each make/model/year and flag
+# deals priced significantly below that average.
 # ───────────────────────────────────────────────────────────────────
 
 from typing import Optional
-from functools import lru_cache
+from statistics import mean, stdev
 
-import requests
-
-
-KBB_API = "https://www.kbb.com/wp-json/kbb/v2/price Advisor"
-
-# How far below KBB to consider a deal "exceptional"
-EXCEPTIONAL_DISCOUNT_PCT = 15  # 15%+ below KBB
-GOOD_DISCOUNT_PCT = 10         # 10%+ below KBB
+# Thresholds for deal ratings
+EXCEPTIONAL_DISCOUNT_PCT = 15  # 15%+ below average = exceptional
+GOOD_DISCOUNT_PCT = 10         # 10%+ below average = good deal
 
 
-def get_kbb_price(
-    year: int,
-    make: str,
-    model: str,
-    mileage: int,
-    condition: str = "Good",
-    zip_code: str = "85001",
-) -> Optional[float]:
-    """
-    Estimate KBB price for a vehicle.
-    Returns None if unavailable.
-    """
-    # This is a placeholder - KBB doesn't have a free public API
-    # In production, you'd need either:
-    # 1. A paid KBB API key
-    # 2. Web scraping (against ToS)
-    # 3. A third-party service
-
-    # For now, return None to skip KBB comparison
-    return None
-
-
-def compare_to_kbb(
+def compare_to_market(
     listing_price: float,
-    year: int,
     make: str,
     model: str,
-    mileage: int,
-    zip_code: str = "85001",
+    year: int,
+    all_prices: list[float],
 ) -> dict:
     """
-    Compare a listing price to KBB estimated value.
-    Returns dict with kbb_price, discount_pct, and rating.
+    Compare a listing price to the market average for that make/model/year.
+    Uses all_prices (prices of same make/model from scraped data).
+    Returns dict with avg_price, discount_pct, and rating.
     """
-    kbb_price = get_kbb_price(year, make, model, mileage, zip_code=zip_code)
-
-    if not kbb_price or kbb_price <= 0:
+    if not all_prices or len(all_prices) < 3:
         return {
-            "kbb_price": None,
+            "avg_price": None,
             "discount_pct": None,
             "rating": "unknown",
         }
 
-    discount_pct = ((kbb_price - listing_price) / kbb_price) * 100
+    avg_price = mean(all_prices)
+    if avg_price <= 0:
+        return {
+            "avg_price": None,
+            "discount_pct": None,
+            "rating": "unknown",
+        }
+
+    discount_pct = ((avg_price - listing_price) / avg_price) * 100
 
     if discount_pct >= EXCEPTIONAL_DISCOUNT_PCT:
         rating = "exceptional"
@@ -74,7 +53,24 @@ def compare_to_kbb(
         rating = "above_market"
 
     return {
-        "kbb_price": kbb_price,
+        "avg_price": round(avg_price),
         "discount_pct": round(discount_pct, 1),
         "rating": rating,
     }
+
+
+def get_market_prices(
+    make: str,
+    model: str,
+    all_listings: list,
+) -> list[float]:
+    """
+    Get all prices for the same make/model from a list of ScrapedListing objects.
+    """
+    return [
+        l.price_usd
+        for l in all_listings
+        if l.make and l.make.lower() == make.lower()
+        and l.model and l.model.lower() == model.lower()
+        and l.price_usd > 0
+    ]

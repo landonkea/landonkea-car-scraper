@@ -156,6 +156,36 @@ class BaseScraper(ABC):
         handler = PRODUCT_TYPES[self.config.search.product_type]
         return handler.parse_specs(title)
 
+    def enrich_with_vin(self, listing: ScrapedListing) -> ScrapedListing:
+        """
+        If a VIN is found in the listing title, decode it and fill in
+        missing make/model/year/transmission/fuel_type fields.
+        """
+        from vin_decoder import extract_vin_from_text, decode_vin
+
+        vin = extract_vin_from_text(listing.title)
+        if not vin:
+            return listing
+
+        listing.vin = vin
+        decoded = decode_vin(vin)
+        if not decoded:
+            return listing
+
+        # Only fill fields that are missing or empty
+        if not listing.make and decoded.get("make"):
+            listing.make = decoded["make"]
+        if not listing.model and decoded.get("model"):
+            listing.model = decoded["model"]
+        if not listing.year and decoded.get("year"):
+            listing.year = decoded["year"]
+        if not listing.transmission and decoded.get("transmission"):
+            listing.transmission = decoded["transmission"]
+        if not listing.fuel_type and decoded.get("fuel_type"):
+            listing.fuel_type = decoded["fuel_type"]
+
+        return listing
+
     def passes_filters(self, listing: ScrapedListing) -> bool:
         """Check if a listing matches our search criteria."""
         s = self.config.search
