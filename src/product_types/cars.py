@@ -155,6 +155,11 @@ class CarHandler(ProductTypeHandler):
                 return False
         if listing.mileage is not None and listing.mileage > search.max_mileage:
             return False
+        # Verify make matches the search (reject wrong makes from eBay/CarGurus)
+        expected_make = _extract_make(search.product_name)
+        if expected_make and listing.make:
+            if listing.make.lower() != expected_make.lower():
+                return False
         return True
 
     def score_bonuses(self, listing, search) -> float:

@@ -99,9 +99,10 @@ class eBayScraper(BaseScraper):
         url = link_elem.get("href", "")
 
         # Clean up eBay title artifacts
-        title = re.sub(r'opens\s*(?:in\s*(?:a\s*)?new\s*(?:tab|window))?$', '', title, flags=re.IGNORECASE).strip()
+        title = re.sub(r'\s*opens\s*(?:in\s*(?:a\s*)?new\s*(?:tab|window))?\s*$', '', title, flags=re.IGNORECASE).strip()
         title = re.sub(r'opens\s*$', '', title, flags=re.IGNORECASE).strip()
         title = re.sub(r'lxopens', 'lx', title, flags=re.IGNORECASE).strip()
+        title = re.sub(r'(\w)opens\b', r'\1', title, flags=re.IGNORECASE).strip()
         title = re.sub(r'\s+', ' ', title)  # normalize whitespace
 
         if not title or "Shop on eBay" in title or "contact seller" in title.lower():
