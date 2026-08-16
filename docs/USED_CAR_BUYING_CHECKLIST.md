@@ -323,4 +323,69 @@ Stop and leave if you see any of these:
 
 ---
 
+## Local In-Person Car Buying Options (Phoenix, AZ)
+
+These are places where you can walk in, test drive, and buy a car in person.
+
+### National Chains (No-Haggle, Test Drive Available)
+
+**CarMax** — Largest used car retailer in the US
+- **Scottsdale**: 15350 N Hayden Rd, Scottsdale, AZ 85260 — (800) 519-1511
+  - Hours: Sun 12-7, Mon-Fri 11-8, Sat 9-7
+- **Phoenix-West Valley**: 1041 N 99th Ave, Tolleson, AZ 85353 — (623) 291-1969
+  - Hours: Sun 12-7, Mon-Fri 10-9, Sat 9-9
+- **Phoenix-Gilbert**: 1480 E Motorplex Loop, Gilbert, AZ 85297 — (866) 575-3882
+  - Hours: Sun 12-7, Mon-Fri 10-9, Sat 9-9
+- **Why CarMax**: No-haggle pricing, 10-day return policy, on-site financing, test drives with no pressure. They have Honda Fits, Nissan Versas, Kia Rios in stock.
+
+**Carvana** — Online-first but has pickup locations
+- **Phoenix**: Multiple pickup locations (vending machines + hubs)
+- **Why Carvana**: Browse online, schedule test drive at pickup location. 7-day return policy. Good for comparing many options before going in person.
+
+### Local Dealerships (Test Drive, Negotiate)
+
+**Arizona Best Cars** — Budget-friendly compact cars
+- 9621 N Cave Creek Rd, Phoenix, AZ 85020 — (602) 870-8080
+- Hours: Sun 12-5, Mon-Thu 9-5, Fri 9-2, Sat closed
+- Website: bestarizonacars.com
+
+**Camelback World Auto** — Wide selection, good customer service
+- Phoenix, AZ — Open 7 days a week
+- Hours: Sun 10-6, Mon-Fri 7-9, Sat 8-8
+
+**Alta Vista Auto** — No-pressure, transparent pricing
+- Phoenix, AZ
+- Hours: Mon-Thu 9-6, Fri 9-5, Sat 10-4, Sun closed
+
+**Fantasy Auto Sales** — Budget options
+- 9102 N 7th St, Phoenix, AZ 85020 — (602) 997-6056
+- Hours: Sun 11-4, Mon-Fri 10-6, Sat closed
+
+**DriveTime** — In-house financing, no-haggle
+- 1515 E Bell Rd, Phoenix, AZ 85222 — (623) 434-5555
+- Hours: Sun closed, Mon-Thu 11-7, Fri 10-8, Sat 9-6
+
+### Private Party (Facebook Marketplace, OfferUp, Craigslist)
+
+When buying from a private seller:
+- Always meet in a public place (police station parking lot is ideal)
+- Bring a friend
+- Bring cash (but don't flash it)
+- Get the VIN and run a check before you go
+- Test drive with the seller in the car
+- Do the paperwork at the MVD together
+
+### Tips for Test Driving at a Dealer
+
+1. **Call ahead** — Ask if they have the specific car you want on the lot
+2. **Schedule a test drive** — Most dealers let you book online or by phone
+3. **Bring your license** — They'll need it for the test drive
+4. **Take your time** — Don't let them rush you
+5. **Drive your normal route** — If possible, drive the roads you'll actually use
+6. **Ask questions** — About the car's history, maintenance, any issues
+7. **Get the VIN** — Run your own check even if they provide a report
+8. **Negotiate** — Most local dealers expect it; CarMax and DriveTime don't
+
+---
+
 *Last updated: August 2026*

@@ -64,7 +64,7 @@ REJECTED_MODELS = [
     "rogue", "murano", "pathfinder", "frontier", "titan", "armada", "kicks",
     "juke", "xterra",
     # Kia
-    "sportage", "sorento", "seltos", "telluride", "carnival", "soul",
+    "sportage", "sorento", "seltos", "telluride", "carnival",
     # Chevy
     "equinox", "traverse", "tahoe", "suburban", "colorado", "silverado",
     "blazer", "trailblazer", "trax",

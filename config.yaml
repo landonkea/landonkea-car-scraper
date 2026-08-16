@@ -37,6 +37,174 @@ database:
 # ── Searches ───────────────────────────────────────────────────────
 # Each entry is a separate product search that runs sequentially.
 searches:
+  - product_name: "Toyota Yaris (2015+, automatic)"
+    product_type: car
+    min_year: 2015
+    max_mileage: 150000
+    transmission: automatic
+    min_doors: 4
+    title_status: clean
+    preferred_brands:
+      - Toyota
+    min_price: 500
+    results_per_size: 45
+
+  - product_name: "Toyota Corolla (2015+, automatic)"
+    product_type: car
+    min_year: 2015
+    max_mileage: 150000
+    transmission: automatic
+    min_doors: 4
+    title_status: clean
+    preferred_brands:
+      - Toyota
+    min_price: 500
+    results_per_size: 45
+
+  - product_name: "Honda Civic (2015+, automatic)"
+    product_type: car
+    min_year: 2015
+    max_mileage: 150000
+    transmission: automatic
+    min_doors: 4
+    title_status: clean
+    preferred_brands:
+      - Honda
+    min_price: 500
+    results_per_size: 45
+
+  - product_name: "Hyundai Accent (2015+, automatic)"
+    product_type: car
+    min_year: 2015
+    max_mileage: 150000
+    transmission: automatic
+    min_doors: 4
+    title_status: clean
+    preferred_brands:
+      - Hyundai
+    min_price: 500
+    results_per_size: 45
+
+  - product_name: "Kia Forte (2015+, automatic)"
+    product_type: car
+    min_year: 2015
+    max_mileage: 150000
+    transmission: automatic
+    min_doors: 4
+    title_status: clean
+    preferred_brands:
+      - Kia
+    min_price: 500
+    results_per_size: 45
+
+  - product_name: "Hyundai Elantra (2015+, automatic)"
+    product_type: car
+    min_year: 2015
+    max_mileage: 150000
+    transmission: automatic
+    min_doors: 4
+    title_status: clean
+    preferred_brands:
+      - Hyundai
+    min_price: 500
+    results_per_size: 45
+
+  - product_name: "Mitsubishi Mirage (2015+, automatic)"
+    product_type: car
+    min_year: 2015
+    max_mileage: 150000
+    transmission: automatic
+    min_doors: 4
+    title_status: clean
+    preferred_brands:
+      - Mitsubishi
+    min_price: 500
+    results_per_size: 45
+
+  - product_name: "Ford Fiesta (2015+, automatic)"
+    product_type: car
+    min_year: 2015
+    max_mileage: 150000
+    transmission: automatic
+    min_doors: 4
+    title_status: clean
+    preferred_brands:
+      - Ford
+    min_price: 500
+    results_per_size: 45
+
+  - product_name: "Ford Focus (2015+, automatic)"
+    product_type: car
+    min_year: 2015
+    max_mileage: 150000
+    transmission: automatic
+    min_doors: 4
+    title_status: clean
+    preferred_brands:
+      - Ford
+    min_price: 500
+    results_per_size: 45
+
+  - product_name: "Mazda 3 (2015+, automatic)"
+    product_type: car
+    min_year: 2015
+    max_mileage: 150000
+    transmission: automatic
+    min_doors: 4
+    title_status: clean
+    preferred_brands:
+      - Mazda
+    min_price: 500
+    results_per_size: 45
+
+  - product_name: "Chevrolet Cruze (2015+, automatic)"
+    product_type: car
+    min_year: 2015
+    max_mileage: 150000
+    transmission: automatic
+    min_doors: 4
+    title_status: clean
+    preferred_brands:
+      - Chevrolet
+    min_price: 500
+    results_per_size: 45
+
+  - product_name: "Kia Soul (2015+, automatic)"
+    product_type: car
+    min_year: 2015
+    max_mileage: 150000
+    transmission: automatic
+    min_doors: 4
+    title_status: clean
+    preferred_brands:
+      - Kia
+    min_price: 500
+    results_per_size: 45
+
+  - product_name: "Volkswagen Jetta (2015+, automatic)"
+    product_type: car
+    min_year: 2015
+    max_mileage: 150000
+    transmission: automatic
+    min_doors: 4
+    title_status: clean
+    preferred_brands:
+      - Volkswagen
+    min_price: 500
+    results_per_size: 45
+
+  - product_name: "Subaru Impreza (2015+, automatic)"
+    product_type: car
+    min_year: 2015
+    max_mileage: 150000
+    transmission: automatic
+    min_doors: 4
+    title_status: clean
+    preferred_brands:
+      - Subaru
+    min_price: 500
+    results_per_size: 45
+
   - product_name: "Honda Fit (2015+, automatic)"
     product_type: car
     min_year: 2015

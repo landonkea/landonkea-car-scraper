@@ -14,13 +14,6 @@
         "avg": 11049.5,
         "max": 11500.0,
         "count": 4
-      },
-      {
-        "date": "2026-08-16",
-        "min": 10599.0,
-        "avg": 11049.5,
-        "max": 11500.0,
-        "count": 4
       }
     ],
     "Ford": [
@@ -33,13 +26,6 @@
       },
       {
         "date": "2026-08-15",
-        "min": 9995.0,
-        "avg": 9995.0,
-        "max": 9995.0,
-        "count": 1
-      },
-      {
-        "date": "2026-08-16",
         "min": 9995.0,
         "avg": 9995.0,
         "max": 9995.0,
@@ -111,13 +97,6 @@
       },
       {
         "date": "2026-08-15",
-        "min": 13800.0,
-        "avg": 13800.0,
-        "max": 13800.0,
-        "count": 2
-      },
-      {
-        "date": "2026-08-16",
         "min": 13800.0,
         "avg": 13800.0,
         "max": 13800.0,
@@ -246,18 +225,97 @@
       {
         "date": "2026-08-16",
         "min": 500.0,
-        "avg": 7453.95,
+        "avg": 7560.45,
         "max": 14897.0,
-        "count": 64
+        "count": 63
       }
-    ],
+    ]
+  },
+  "Chevrolet Cruze (2015+, automatic)": {
+    "Chevrolet": [
+      {
+        "date": "2026-08-16",
+        "min": 2300.0,
+        "avg": 6589.37,
+        "max": 13295.0,
+        "count": 60
+      }
+    ]
+  },
+  "Ford Focus (2015+, automatic)": {
+    "Ford": [
+      {
+        "date": "2026-08-16",
+        "min": 2500.0,
+        "avg": 7564.56,
+        "max": 14999.0,
+        "count": 43
+      }
+    ]
+  },
+  "Hyundai Elantra (2015+, automatic)": {
     "Hyundai": [
       {
         "date": "2026-08-16",
-        "min": 1029.98,
-        "avg": 1273.98,
-        "max": 1629.98,
-        "count": 3
+        "min": 1441.44,
+        "avg": 7792.31,
+        "max": 13990.0,
+        "count": 55
+      }
+    ]
+  },
+  "Mazda 3 (2015+, automatic)": {
+    "Mazda": [
+      {
+        "date": "2026-08-16",
+        "min": 2900.0,
+        "avg": 7657.99,
+        "max": 13995.0,
+        "count": 13
+      }
+    ]
+  },
+  "Mitsubishi Mirage (2015+, automatic)": {
+    "Mitsubishi": [
+      {
+        "date": "2026-08-16",
+        "min": 504.42,
+        "avg": 1024.98,
+        "max": 5500.0,
+        "count": 37
+      }
+    ]
+  },
+  "Subaru Impreza (2015+, automatic)": {
+    "Subaru": [
+      {
+        "date": "2026-08-16",
+        "min": 576.58,
+        "avg": 8379.26,
+        "max": 15000.0,
+        "count": 14
+      }
+    ]
+  },
+  "Toyota Corolla (2015+, automatic)": {
+    "Toyota": [
+      {
+        "date": "2026-08-16",
+        "min": 2100.0,
+        "avg": 9927.82,
+        "max": 14995.0,
+        "count": 45
+      }
+    ]
+  },
+  "Volkswagen Jetta (2015+, automatic)": {
+    "Volkswagen": [
+      {
+        "date": "2026-08-16",
+        "min": 900.0,
+        "avg": 9292.69,
+        "max": 14995.0,
+        "count": 48
       }
     ]
   }
