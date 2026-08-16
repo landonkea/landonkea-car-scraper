@@ -27,10 +27,6 @@ locations:
     zip: "86001"
     regions:
       - flagstaff
-  - name: "Sedona"
-    zip: "86336"
-    regions:
-      - sedona
 
 # ── Global ─────────────────────────────────────────────────────────
 request_timeout: 40

@@ -18,7 +18,7 @@ ENTITY_IDS = {
     "honda fit": "d744",
     "chevy spark": "d906",
     "chevrolet spark": "d906",
-    "nissan versa": "d262",
+    "nissan versa": "d937",
     "kia rio": "d159",
 }
 
