@@ -40,6 +40,62 @@ BAD_CONDITION_KEYWORDS = [
     "flood damage", "fire damage", "frame damage",
 ]
 
+# ── Body types to REJECT (not compact/subcompact) ───────────────
+# We only want compact and subcompact sedans/hatchbacks.
+REJECTED_BODY_KEYWORDS = [
+    # SUVs / Crossovers
+    "suv", "crossover", "truck", "pickup", "minivan", "van",
+    "wagon", "convertible", "roadster",
+    # Specific SUV/truck body keywords
+    "4x4", "4wd", "awd", "4 wheel drive", "all wheel drive",
+    "crew cab", "extended cab", "double cab", "towing",
+    "bed liner", "bed cover", "tonneau",
+]
+
+# ── Specific models that are NOT compact/subcompact ─────────────
+# Even if they match make/model keywords, these are too large.
+REJECTED_MODELS = [
+    # Honda
+    "cr-v", "crv", "pilot", "odyssey", "ridgeline", "passport", "hr-v", "hrv",
+    # Toyota
+    "rav4", "rav 4", "highlander", "4runner", "4 runner", "tacoma", "tundra",
+    "sienna", "sequoia", "land cruiser", "venza", "corolla cross",
+    # Nissan
+    "rogue", "murano", "pathfinder", "frontier", "titan", "armada", "kicks",
+    "juke", "xterra",
+    # Kia
+    "sportage", "sorento", "seltos", "telluride", "carnival", "soul",
+    # Chevy
+    "equinox", "traverse", "tahoe", "suburban", "colorado", "silverado",
+    "blazer", "trailblazer", "trax",
+    # Ford
+    "escape", "explorer", "expedition", "edge", "bronco", "ranger",
+    "f-150", "f150", "f-250", "f250", "f-350", "f350", "mustang",
+    # Hyundai
+    "tucson", "santa fe", "santa fe", "palisade", "kona", "venue",
+    # Subaru
+    "outback", "forester", "crosstrek", "ascent", "tribeca",
+    # Mazda
+    "cx-30", "cx-3", "cx-5", "cx-50", "cx-9", "cx-90",
+    # Jeep
+    "cherokee", "compass", "renegade", "gladiator", "wrangler",
+    "grand cherokee", "wagoneer",
+    # Mitsubishi
+    "outlander", "eclipse cross",
+    # Volkswagen
+    "tiguan", "atlas", "taos",
+    # Ram
+    "1500", "2500", "3500",
+    # Dodge
+    "journey", "durango",
+    # Buick
+    "encore", "envision", "enclave",
+    # GMC
+    "terrain", "acadia", "yukon", "canyon", "sierra",
+    # Misc
+    "patriot", "liberty", "commander",
+]
+
 MINIMUM_PRICE_USD = 500
 
 
@@ -76,6 +132,14 @@ class CarHandler(ProductTypeHandler):
         # Reject salvage/rebuilt titles outright
         if any(kw in title_lower for kw in ("salvage", "rebuilt title", "rebuilt")):
             return False
+        # Reject non-compact/subcompact body types (SUVs, trucks, vans, etc.)
+        for kw in REJECTED_BODY_KEYWORDS:
+            if kw in title_lower:
+                return False
+        # Reject specific models that are not compact/subcompact
+        for model in REJECTED_MODELS:
+            if model in title_lower:
+                return False
         return True
 
     def passes_type_filters(self, listing, search) -> bool:

@@ -29,6 +29,7 @@ dependencies = [
 
     # ── Configuration ─────────────────────────────────────────────
     "pyyaml>=6.0",
+    "python-dotenv>=1.0",
 
     # ── Browser automation (for JS-heavy sites) ────────────────
     "playwright>=1.40",
