@@ -156,6 +156,12 @@ def record_price_history(db, listing: Listing, price_usd: float) -> bool:
 
 def get_engine(database_url: str):
     """Create a database engine (the connection to SQLite)."""
+    # Auto-create data directory for SQLite files
+    if database_url.startswith("sqlite:///"):
+        db_path = database_url.replace("sqlite:///", "")
+        db_dir = os.path.dirname(db_path)
+        if db_dir:
+            os.makedirs(db_dir, exist_ok=True)
     engine = create_engine(
         database_url,
         echo=False,

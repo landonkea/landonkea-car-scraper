@@ -28,6 +28,9 @@ jobs:
       - name: Install Playwright browsers
         run: playwright install chromium
 
+      - name: Create data directory
+        run: mkdir -p data
+
       - name: Run scraper
         env:
           DISCORD_WEBHOOK_URL_CAR: ${{ secrets.DISCORD_WEBHOOK_URL_CAR }}
