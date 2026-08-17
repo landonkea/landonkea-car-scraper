@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Car Scraper History</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4"></script>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: -apple-system, sans-serif; background: #0d1117; color: #c9d1d9; padding: 20px; }
+  h1 { text-align: center; margin-bottom: 8px; font-size: 1.5em; }
+  .subtitle { text-align: center; color: #8b949e; margin-bottom: 24px; font-size: 0.9em; }
+  .stats { display: flex; gap: 16px; justify-content: center; flex-wrap: wrap; margin-bottom: 24px; }
+  .stat { background: #161b22; border: 1px solid #30363d; border-radius: 8px; padding: 16px 24px; text-align: center; min-width: 140px; }
+  .stat .label { color: #8b949e; font-size: 0.8em; text-transform: uppercase; }
+  .stat .value { font-size: 1.8em; font-weight: bold; color: #58a6ff; }
+  .model-section { max-width: 1000px; margin: 0 auto 32px; }
+  .model-section h2 { font-size: 1.1em; color: #c9d1d9; margin-bottom: 16px; padding-bottom: 8px; border-bottom: 1px solid #30363d; }
+  .charts { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 24px; }
+  .chart-box { background: #161b22; border: 1px solid #30363d; border-radius: 8px; padding: 16px; }
+  .chart-box h3 { font-size: 0.85em; color: #8b949e; margin-bottom: 8px; }
+  .full-width { grid-column: 1 / -1; }
+  .table-box { background: #161b22; border: 1px solid #30363d; border-radius: 8px; padding: 16px; max-width: 1000px; margin: 0 auto; }
+  .table-box h3 { font-size: 0.9em; color: #8b949e; margin-bottom: 12px; }
+  table { width: 100%; border-collapse: collapse; font-size: 0.85em; }
+  th { text-align: left; color: #8b949e; padding: 8px; border-bottom: 1px solid #30363d; }
+  td { padding: 8px; border-bottom: 1px solid #21262d; }
+  .empty { text-align: center; color: #8b949e; padding: 40px; }
+  @media (max-width: 700px) { .charts { grid-template-columns: 1fr; } }
+</style>
+</head>
+<body>
+<h1>Car Scraper</h1>
+<p class="subtitle">Daily price trends — 18 models across 30 AZ cities</p>
+<div class="stats" id="stats"></div>
+<div id="content"></div>
+
+<script>
+fetch('data/daily_stats.json').then(r => r.json()).then(data => {
+  const products = Object.keys(data);
+  if (!products.length) { document.getElementById('content').innerHTML = '<div class="empty">No data yet. Run the scraper to start collecting.</div>'; return; }
+
+  let totalModels = 0, totalDays = 0, allDates = new Set();
+  for (const [product, groups] of Object.entries(data)) {
+    for (const [key, series] of Object.entries(groups)) {
+      totalModels++;
+      series.forEach(d => { allDates.add(d.date); totalDays++; });
+    }
+  }
+  const dates = [...allDates].sort();
+  document.getElementById('stats').innerHTML = [
+    ['Models Tracked', totalModels],
+    ['Date Range', dates.length ? `${dates[0].slice(5)} — ${dates[dates.length-1].slice(5)}` : 'N/A'],
+    ['Data Points', totalDays],
+  ].map(([l,v]) => `<div class="stat"><div class="label">${l}</div><div class="value">${v}</div></div>`).join('');
+
+  const colors = ['#58a6ff','#3fb950','#d29922','#bc8cff','#f85149','#79c0ff','#56d364','#e3b341'];
+  let ci = 0;
+  const nextColor = () => colors[ci++ % colors.length];
+
+  const content = document.getElementById('content');
+  for (const [product, groups] of Object.entries(data)) {
+    const section = document.createElement('div');
+    section.className = 'model-section';
+    section.innerHTML = `<h2>${product}</h2>`;
+    const chartsDiv = document.createElement('div');
+    chartsDiv.className = 'charts';
+
+    const box = document.createElement('div');
+    box.className = 'chart-box full-width';
+    box.innerHTML = `<h3>Min / Avg / Max Price Over Time</h3><canvas></canvas>`;
+    chartsDiv.appendChild(box);
+    section.appendChild(chartsDiv);
+    content.appendChild(section);
+
+    const datasets = [];
+    for (const [key, series] of Object.entries(groups)) {
+      const color = nextColor();
+      const dates = series.map(d => d.date.slice(5));
+      datasets.push({ label: key + ' avg', data: series.map(d => d.avg), borderColor: color, backgroundColor: color + '22', fill: false, tension: 0.3, pointRadius: 2 });
+      datasets.push({ label: key + ' min', data: series.map(d => d.min), borderColor: color, borderDash: [4,4], fill: false, tension: 0.3, pointRadius: 0 });
+      datasets.push({ label: key + ' max', data: series.map(d => d.max), borderColor: color, borderDash: [2,2], fill: false, tension: 0.3, pointRadius: 0 });
+      var xLabels = dates;
+    }
+    new Chart(box.querySelector('canvas'), { type: 'line', data: { labels: xLabels, datasets }, options: { responsive: true, plugins: { legend: { labels: { color: '#8b949e', font: { size: 10 } } } }, scales: { x: { ticks: { color: '#8b949e' }, grid: { color: '#21262d' } }, y: { ticks: { color: '#8b949e', callback: v => '$'+v.toLocaleString() }, grid: { color: '#21262d' } } } } });
+  }
+}).catch(() => {
+  document.getElementById('content').innerHTML = '<div class="empty">No data yet. Run the scraper to start collecting.</div>';
+});
+</script>
+</body>
+</html>
