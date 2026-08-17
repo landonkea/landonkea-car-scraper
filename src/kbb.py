@@ -6,8 +6,7 @@
 # deals priced significantly below that average.
 # ───────────────────────────────────────────────────────────────────
 
-from typing import Optional
-from statistics import mean, stdev
+from statistics import mean
 
 # Thresholds for deal ratings
 EXCEPTIONAL_DISCOUNT_PCT = 15  # 15%+ below average = exceptional
@@ -68,9 +67,9 @@ def get_market_prices(
     Get all prices for the same make/model from a list of ScrapedListing objects.
     """
     return [
-        l.price_usd
-        for l in all_listings
-        if l.make and l.make.lower() == make.lower()
-        and l.model and l.model.lower() == model.lower()
-        and l.price_usd > 0
+        listing.price_usd
+        for listing in all_listings
+        if listing.make and listing.make.lower() == make.lower()
+        and listing.model and listing.model.lower() == model.lower()
+        and listing.price_usd > 0
     ]

@@ -6,7 +6,6 @@
 # ───────────────────────────────────────────────────────────────────
 
 import json
-import re
 from typing import Optional
 
 from scrapers.base import BaseScraper, ScrapedListing
@@ -46,7 +45,6 @@ class CarGurusScraper(BaseScraper):
             stealth = Stealth()
 
             entity_id = self._get_entity_id()
-            max_price = int(self.config.price.absolute_max_usd)
 
             # Get zip codes from locations config
             zip_codes = [loc.zip for loc in self.config.locations] if self.config.locations else ["85001"]

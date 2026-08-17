@@ -88,7 +88,7 @@ class PriceAnalyzer:
     def _compute_stats(self) -> dict:
         if not self.listings:
             return {"count": 0, "mean": 0, "median": 0, "min": 0, "max": 0, "std_dev": 0, "q25": 0, "q75": 0}
-        prices = [l.price_usd for l in self.listings]
+        prices = [listing.price_usd for listing in self.listings]
         prices_sorted = sorted(prices)
         n = len(prices_sorted)
         mean_val = statistics.mean(prices)
@@ -236,7 +236,7 @@ class PriceAnalyzer:
                 listing.is_great_deal = False
                 if not listing.title.startswith(SUSPICIOUS_TAG):
                     listing.title = SUSPICIOUS_TAG + listing.title
-        self.listings.sort(key=lambda l: l.deal_score or 0, reverse=True)
+        self.listings.sort(key=lambda listing: listing.deal_score or 0, reverse=True)
         return self.listings
 
     def get_top_deals(self, count: Optional[int] = None) -> list[Listing]:

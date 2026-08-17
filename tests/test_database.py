@@ -6,6 +6,7 @@ import pytest
 from datetime import datetime, timedelta, timezone
 
 from sqlalchemy import create_engine
+from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import sessionmaker
 
 from database import Base, Listing, PriceHistory, record_price_history, prune_old_inactive_listings
@@ -113,13 +114,24 @@ class TestUpsert:
         assert result.price_usd == 6500
 
     def test_no_duplicate_listings(self, db):
+        """
+        The uq_source_listing constraint (source, listing_id) is what
+        actually stops a second scrape of the same real-world listing
+        from becoming a second row, this exercises that constraint
+        directly rather than main.py's upsert logic (which finds an
+        existing row and updates it before a raw insert would even be
+        attempted, and is covered separately in test_dry_run.py-style
+        integration tests, not here).
+        """
         listing1 = _make_listing(price_usd=7500)
-        listing2 = _make_listing(price_usd=6500)
+        listing2 = _make_listing(price_usd=6500)  # same source/listing_id as listing1
         db.add(listing1)
         db.commit()
-        # Simulate upsert by updating
-        listing1.price_usd = 6500
-        db.commit()
+
+        db.add(listing2)
+        with pytest.raises(IntegrityError):
+            db.commit()
+        db.rollback()
 
         count = db.query(Listing).count()
         assert count == 1

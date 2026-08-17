@@ -6,7 +6,6 @@
 # load Facebook Marketplace search results.
 # ───────────────────────────────────────────────────────────────────
 
-import json
 import re
 from typing import Optional
 

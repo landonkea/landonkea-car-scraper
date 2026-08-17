@@ -159,8 +159,31 @@ class Config:
     locations: list[LocationConfig] = field(default_factory=list)
     secrets: dict = field(default_factory=_load_env_secrets)
     environment: str = field(default_factory=get_environment)
-    search: Optional["SearchConfig"] = None
+    # Backing field for the `search` property below: the active
+    # SearchConfig for the search currently being processed. main.py's
+    # per-search loop sets this (`config.search = search_config`)
+    # before running any scraper; every scraper, notifier, and the
+    # price analyzer then read config.search assuming it's already
+    # set. The property raises a clear RuntimeError instead of
+    # returning None if read before that assignment happens, rather
+    # than surfacing as a confusing AttributeError several calls deeper.
+    _search: Optional["SearchConfig"] = field(default=None, repr=False)
     dry_run: bool = False
+
+    @property
+    def search(self) -> "SearchConfig":
+        if self._search is None:
+            raise RuntimeError(
+                "config.search was read before being set. main.py's "
+                "per-search loop must set `config.search = search_config` "
+                "before running any scraper, notifier, or price analyzer "
+                "for that search."
+            )
+        return self._search
+
+    @search.setter
+    def search(self, value: "SearchConfig") -> None:
+        self._search = value
 
 
 def _parse_site(raw: dict) -> SiteConfig:

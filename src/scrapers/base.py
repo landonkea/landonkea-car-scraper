@@ -10,7 +10,7 @@ import random
 import time
 from abc import ABC, abstractmethod
 from typing import Optional
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 
 import requests
 from bs4 import BeautifulSoup

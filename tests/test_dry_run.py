@@ -3,9 +3,8 @@
 Verifies the full pipeline works end-to-end without sending alerts.
 """
 import pytest
-from unittest.mock import MagicMock, patch
 
-from config import load_config, Config
+from config import load_config
 from scrapers.base import ScrapedListing
 from price_analyzer import PriceAnalyzer
 from database import Listing, get_session
@@ -157,7 +156,7 @@ class TestDryRunPipeline:
         analyzer = PriceAnalyzer(config)
         result = analyzer.analyze(sample_listings)
 
-        great_deals = [l for l in result if l.is_great_deal]
+        great_deals = [listing for listing in result if listing.is_great_deal]
         assert len(great_deals) >= 1
 
     def test_top_deals_returned(self, config_file, sample_listings):

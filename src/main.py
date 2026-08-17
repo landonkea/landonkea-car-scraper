@@ -245,18 +245,18 @@ def _run_one_search(
     top_deals = analyzer.get_top_deals()
     if top_deals:
         print(f"\n  Top {len(top_deals)} Deals:")
-        for i, l in enumerate(top_deals[:5], 1):
-            car_info = f"{l.year or '?'} {l.make or '?'} {l.model or '?'}"
-            mileage_str = f"{l.mileage:,}mi" if l.mileage else "?"
-            emoji = "!" if l.is_great_deal else "$"
-            print(f"    {emoji} #{i}: ${l.price_usd:,.0f} | {car_info} ({mileage_str}) | {l.source} | Score: {l.deal_score}")
+        for i, deal in enumerate(top_deals[:5], 1):
+            car_info = f"{deal.year or '?'} {deal.make or '?'} {deal.model or '?'}"
+            mileage_str = f"{deal.mileage:,}mi" if deal.mileage else "?"
+            emoji = "!" if deal.is_great_deal else "$"
+            print(f"    {emoji} #{i}: ${deal.price_usd:,.0f} | {car_info} ({mileage_str}) | {deal.source} | Score: {deal.deal_score}")
 
     print("\nChecking for new listings...")
     new_listings = find_new_listings(db, all_scraped)
     print(f"  Truly new: {len(new_listings)}")
 
     print("\nSending alerts...")
-    has_great_deals = any(l.is_great_deal for l in top_deals)
+    has_great_deals = any(deal.is_great_deal for deal in top_deals)
 
     if config.dry_run:
         if new_listings or has_great_deals:
@@ -293,10 +293,10 @@ def run_scrape(config: Config) -> int:
     if scooped_deals:
         print(f"  {len(scooped_deals)} great deal(s) expired within "
               f"{SCOOPED_DEAL_HOURS}h, likely scooped:")
-        for l in scooped_deals:
-            print(f"    - ${l.price_usd:,.0f} | {l.source} | {l.title[:60]}")
+        for deal in scooped_deals:
+            print(f"    - ${deal.price_usd:,.0f} | {deal.source} | {deal.title[:60]}")
         if config.dry_run:
-            print(f"  [dry-run] Would send scooped-deal alert, skipped.")
+            print("  [dry-run] Would send scooped-deal alert, skipped.")
         else:
             notifier = Notifier(config)
             notifier.send_scooped_deal_alert(scooped_deals)
@@ -317,7 +317,7 @@ def run_scrape(config: Config) -> int:
         if watchlist_alerts:
             print(f"\n{len(watchlist_alerts)} watchlist listing(s) newly matched or changed price...")
             if config.dry_run:
-                print(f"  [dry-run] Would send watchlist alert, skipped.")
+                print("  [dry-run] Would send watchlist alert, skipped.")
             else:
                 notifier = Notifier(config)
                 notifier.send_watchlist_alert(watchlist_alerts)

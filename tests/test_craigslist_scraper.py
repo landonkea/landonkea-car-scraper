@@ -3,7 +3,7 @@
 Covers URL building, price parsing, listing ID extraction, and HTML parsing.
 """
 import pytest
-from unittest.mock import MagicMock, patch
+from unittest.mock import MagicMock
 
 from scrapers.craigslist import CraigslistScraper
 

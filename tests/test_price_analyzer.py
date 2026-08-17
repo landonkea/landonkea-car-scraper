@@ -135,7 +135,7 @@ class TestDealScoring:
             _make_listing(price_usd=7000),
         ]
         result = analyzer.analyze(listings)
-        scores = [l.deal_score for l in result]
+        scores = [listing.deal_score for listing in result]
         assert scores == sorted(scores, reverse=True)
 
 

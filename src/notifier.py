@@ -126,7 +126,7 @@ class Notifier:
         msg = MIMEMultipart("alternative")
         msg["Subject"] = (
             f"{len(top_deals)} {product} Deals Found, "
-            f"Lowest: ${min(l.price_usd for l in top_deals):,.0f}"
+            f"Lowest: ${min(deal.price_usd for deal in top_deals):,.0f}"
         )
         msg["From"] = email_from
         msg["To"] = email_to
@@ -137,10 +137,10 @@ class Notifier:
             f"Median: ${stats['median']:,.0f}\n\n"
             f"Top deals:\n"
         )
-        for i, l in enumerate(top_deals[:5], 1):
-            car_info = f"{l.year or '?'} {l.make or '?'} {l.model or '?'}"
-            mileage_str = f"{l.mileage:,}mi" if l.mileage else "?"
-            plain_text += f"  {i}. ${l.price_usd:,.0f} - {car_info} ({mileage_str}) - {l.source}\n"
+        for i, deal in enumerate(top_deals[:5], 1):
+            car_info = f"{deal.year or '?'} {deal.make or '?'} {deal.model or '?'}"
+            mileage_str = f"{deal.mileage:,}mi" if deal.mileage else "?"
+            plain_text += f"  {i}. ${deal.price_usd:,.0f} - {car_info} ({mileage_str}) - {deal.source}\n"
 
         msg.attach(MIMEText(plain_text, "plain"))
 

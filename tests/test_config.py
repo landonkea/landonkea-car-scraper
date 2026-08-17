@@ -2,12 +2,10 @@
 
 Uses a minimal config fixture to test parsing without real API keys.
 """
-import os
-import tempfile
 import pytest
 import yaml
 
-from config import load_config, SearchConfig, PriceConfig, SitesConfig
+from config import load_config
 
 
 MINIMAL_CONFIG = {
