@@ -24,6 +24,7 @@ def _load_env_secrets() -> dict:
         "discord_webhook_url_dev": os.environ.get("DISCORD_WEBHOOK_URL_DEV"),
         "discord_webhook_url_cars": os.environ.get("DISCORD_WEBHOOK_URL_CARS"),
         "discord_webhook_url_cars_dev": os.environ.get("DISCORD_WEBHOOK_URL_CARS_DEV"),
+        "DISCORD_WEBHOOK_URL_CAR": os.environ.get("DISCORD_WEBHOOK_URL_CAR"),
         "facebook_session_cookie": os.environ.get("FACEBOOK_SESSION_COOKIE"),
     }
 
