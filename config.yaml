@@ -27,6 +27,114 @@ locations:
     zip: "86001"
     regions:
       - flagstaff
+  - name: "Mesa"
+    zip: "85201"
+    regions:
+      - phoenix
+  - name: "Chandler"
+    zip: "85224"
+    regions:
+      - phoenix
+  - name: "Gilbert"
+    zip: "85234"
+    regions:
+      - phoenix
+  - name: "Glendale"
+    zip: "85301"
+    regions:
+      - phoenix
+  - name: "Scottsdale"
+    zip: "85251"
+    regions:
+      - phoenix
+  - name: "Tempe"
+    zip: "85281"
+    regions:
+      - phoenix
+  - name: "Peoria"
+    zip: "85345"
+    regions:
+      - phoenix
+  - name: "Surprise"
+    zip: "85374"
+    regions:
+      - phoenix
+  - name: "Yuma"
+    zip: "85364"
+    regions:
+      - yuma
+  - name: "Prescott"
+    zip: "86301"
+    regions:
+      - prescott
+  - name: "Lake Havasu City"
+    zip: "86403"
+    regions:
+      - mohave
+  - name: "Sierra Vista"
+    zip: "85635"
+    regions:
+      - sierravista
+  - name: "Show Low"
+    zip: "85901"
+    regions:
+      - showlow
+  - name: "Casa Grande"
+    zip: "85122"
+    regions:
+      - phoenix
+  - name: "Maricopa"
+    zip: "85138"
+    regions:
+      - phoenix
+  - name: "Avondale"
+    zip: "85323"
+    regions:
+      - phoenix
+  - name: "Goodyear"
+    zip: "85338"
+    regions:
+      - phoenix
+  - name: "Buckeye"
+    zip: "85326"
+    regions:
+      - phoenix
+  - name: "Florence"
+    zip: "85132"
+    regions:
+      - phoenix
+  - name: "Cottonwood"
+    zip: "86326"
+    regions:
+      - prescott
+  - name: "Kingman"
+    zip: "86401"
+    regions:
+      - mohave
+  - name: "Nogales"
+    zip: "85621"
+    regions:
+      - tucson
+  - name: "Douglas"
+    zip: "85607"
+    regions:
+      - sierravista
+  - name: "Page"
+    zip: "86040"
+    regions:
+      - flagstaff
+  - name: "Winslow"
+    zip: "86047"
+    regions:
+      - flagstaff
+  - name: "Holbrook"
+    zip: "86025"
+    regions:
+      - showlow
+  - name: "Globe"
+    zip: "85501"
+    regions:
+      - showlow
 
 # ── Global ─────────────────────────────────────────────────────────
 request_timeout: 40
